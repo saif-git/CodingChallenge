@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Sale;
 use Illuminate\Contracts\Validation\Rule;
 
 class PostalCodeConflictValidator implements Rule
@@ -26,10 +27,16 @@ class PostalCodeConflictValidator implements Rule
     public function passes($attribute, $value)
     {
         if(!empty($value)){
-            $star = ['*'];
-            $post_code = str_replace($star,'00',$value);
-            if(strlen($value)==5){
-                return true
+
+            $verif = preg_match('/[0-9]{5}-[0-9]{3}$/',$value,$attr);
+
+            if($verif){
+                    $star = ['*'];
+                    $post_code = str_replace($star,'00',$value);
+                    if(strlen($value)==5){
+                        return Sale::where('postal_codes','<=',$post_code)->where('sales_aria','<=',$value);
+                    }
+                    return false;
             }
             return false;
         }

@@ -28,7 +28,7 @@ class SalesRequest extends FormRequest
         return [
 
             'postal_code'=>[
-                'required|min:5',
+                'required|min:4|max:5"',
                 'integer',
                 new PostalCodeConflictValidator(),
             ],
